@@ -34,6 +34,9 @@ Add your solutions to the `lab-01_answer.Rmd` file as you work through the exerc
 Obtain a copy of this questions document and the answer R Markdown file using Git.
 To clone a copy of this repository to your own PC:
 
+```{bash, eval = FALSE}
+$ git clone https://github.com/tisem-digital-marketing/smwa-lab-01.git
+```
 
 Once you have your copy, open the answer document in RStudio an RStudio project and work through the questions.
 
@@ -45,13 +48,15 @@ When you are uncertain or do not know what to do next - ask questions of your pe
 
 You will need to use the following `R` libraries throughout this exercise:
 
+```{r, load-packages-tweet, eval = TRUE, message=FALSE, warning=FALSE}
+library(rtweet) # twitter api
+library(tibble)
+library(dplyr)
+library(rlist)
+```
 
 In this exercise you will access the Twitter API programmatically to collect recent tweets related to Covid-19 posted from the Netherlands.
 The goal of this exercise is to get comfortable with the `rtweet` package so you can harvest Twitter data on topics and users you are interested in for the future.
-
-```{block, opts.label = "alert"}
-Note that because you will likely work on this tutorial at a different time to some of your peers, the data that you collect will likely differ from person to person - this is totally OK.
-```
 
 1. Search for the most recent 500 tweets that use the hashtag `#covid19`.
   Include retweets in what is returned.
@@ -92,6 +97,9 @@ You can load this as follows:^[
   This means you do not need to use the `lookup_coords()` function of `rtweet` saving you the need for a Google Maps API Billing code.
 ]
 
+```{r, eval = TRUE}
+nl_geocode <- list.load('data/nl_geocode.rds')
+```
 
 4. Modify your previous search to extract tweets from the Netherlands.
 
@@ -137,6 +145,14 @@ Collect the 3200 most recent tweets from them (that's the upper limit Twitter wi
 
 Take a random sample of 5 people that follow the RIVM from the list above as follows:
 
+```{r, eval = FALSE}
+# turn eval = FALSE to eval = TRUE at the beginning of the codeblock to run this when you knit your document
+smple <- 
+  rivm_follow %>%
+  sample_n(5) %>%
+  select(user_id) %>%
+  deframe() # this converts a dataframe to a vector
+``` 
 
 9. Collect the user information for these 5 accounts.
 
@@ -168,6 +184,14 @@ If a user has not posted any tweets, `rtweet` will return no tweets for that use
 
 You will need to use the following `R` libraries throughout this exercise:
 
+```{r, eval = TRUE, message=FALSE, warning=FALSE}
+library(readr)
+library(tidygraph)
+library(ggraph)
+library(dplyr)
+library(tidyr)
+library(tibble)
+```
 
 In this exercise you will work with some existing Twitter data so that you can check your results and understanding on a static data set.
 The data you will use is a collection of tweets that all have the hashtag `#rstats` in their text.
@@ -175,6 +199,8 @@ The data you will use is a collection of tweets that all have the hashtag `#rsta
 The data are collected from 2018, and can be downloaded from the internet: 
 
 ```{r, rstat-dowload, cache=TRUE}
+# note that cache = TRUE means we only execute this chunk once when R thinks something has changed in it
+# This saves us downloading the file every time you knit the document.
 url <- "https://bit.ly/3r8Gu4M"
 # where to save data
 out_file = "data/rstats_tweets.rds"
@@ -300,7 +326,6 @@ We recommend doing the following:
 
 2. Plot the retweet and mentions networks from your data.
    Can you find a way to plot them side by side?
-   Are there interesting dynamics in how the network grows over time (and can you visualize it)?
 
 3. Upload the final images to the Slack channel `#lab01-showcase`.
    We are eager to see the network patterns that you uncover.^[
