@@ -1,0 +1,317 @@
+---
+title: "My answers"
+author: "My name"
+date: '`r format(Sys.time(), "%d %B, %Y")`'
+output: html_document
+---
+
+
+## Motivation
+
+Digital Social Networks - the connections between users - are the basis of all social media platforms.
+To build an understanding of social media, one could reasonably argue we first need to understand the connections between users.
+
+In this tutorial you will learn how to construct networks of Twitter users based on their retweet behaviour, who a user mentions in a tweet or who a user replies to.
+In Part 1 you will explore how to collect tweets and information about twitter users using the Twitter API via R's `rtweet` package.
+Part 2 uses an existing data set and illustrates how to visualise a Twitter network based on replies to an original tweet.
+Part 3 asks you to combine what you have learned in the previous steps and construct a visualisation of a Twitter network for a topic of your choice.
+
+## Learning Goals
+
+By the end of this tutorial you will be able to:
+
+* Use the `rtweet` package to access the Twitter API and download tweets that mention a set of words or hashtags.
+* Use the `rtweet` package to retrieve the friends and followers of a Twitter user.
+* Collect recent tweets from a particular Twitter user.
+* Construct an edge list that connects Twitter users based on mentions, replies and/or retweets
+* Plot networks of Twitter users using `tidygraph` and `ggraph`
+
+## Instructions to Students
+
+These tutorials are **not graded**, but we encourage you to invest time and effort into working through them from start to finish.
+Add your solutions to the `lab-01_answer.Rmd` file as you work through the exercises so that you have a record of the work you have done.
+
+Obtain a copy of this questions document and the answer R Markdown file using Git.
+To clone a copy of this repository to your own PC:
+
+
+Once you have your copy, open the answer document in RStudio an RStudio project and work through the questions.
+
+The goal of the tutorials is to explore how to "do" the technical side of social media analytics.
+Use this as an opportunity to push your limits and develop new skills.
+When you are uncertain or do not know what to do next - ask questions of your peers and the instructors on the classes Slack channel `#lab01-discussion`.
+
+## Exercise 1: Collecting Twitter Data with `rtweet`
+
+You will need to use the following `R` libraries throughout this exercise:
+
+
+In this exercise you will access the Twitter API programmatically to collect recent tweets related to Covid-19 posted from the Netherlands.
+The goal of this exercise is to get comfortable with the `rtweet` package so you can harvest Twitter data on topics and users you are interested in for the future.
+
+```{block, opts.label = "alert"}
+Note that because you will likely work on this tutorial at a different time to some of your peers, the data that you collect will likely differ from person to person - this is totally OK.
+```
+
+1. Search for the most recent 500 tweets that use the hashtag `#covid19`.
+  Include retweets in what is returned.
+
+
+```{r}
+# Write your answer here
+```
+
+
+2. Adjust your search to return 500 tweets that use the hashtag `#covid19` but do not include retweets, or replies.
+
+
+```{r}
+# Write your answer here
+```
+
+
+For the remainder of the exercise, we will always include retweets and replies.
+
+3. Now, let's geo-restrict the tweets we collect. 
+   Collect 500 tweets using the hashtag `#covid19` that lie within a 50 km radius of Rotterdam.
+   HINT: The geo-cordinates of Rotterdam are `'51.9244,4.4777,50km'`.^[
+   Hat-tip to Ana Martinovici at Rotterdam School of Management for knowing and sharing these!
+   ]
+   
+
+```{r}
+# Write your answer here
+```
+
+
+Instead of working around a radius of Rotterdam, we can get tweets that are geocoded as being located in the Netherlands.
+In the [Demonstration Video](git@github.com:tisem-digital-marketing/smwa-demo-01.git),
+we showed how to geo-reference the Netherlands.
+The geocode for the Netherlands are saved in the `data/` folder.
+You can load this as follows:^[
+  This means you do not need to use the `lookup_coords()` function of `rtweet` saving you the need for a Google Maps API Billing code.
+]
+
+
+4. Modify your previous search to extract tweets from the Netherlands.
+
+
+```{r}
+# Write your answer here
+```
+
+
+5. Adjust your search above to only include tweets written in Dutch. 
+   Try to extract up to 50,000 tweets (i.e. the *more* than the nominal limit from the API).
+   
+
+```{r}
+# Write your answer here
+```
+
+   
+6. The RIVM seems to be the most active Government Department tweeting about health matters.
+Collect the 3200 most recent tweets from them (that's the upper limit Twitter will let you get for free).
+
+
+```{r}
+# Write your answer here
+```
+
+
+7. Collect the `user_ids` for everyone that RIVM follows.
+
+
+```{r}
+# Write your answer here
+```
+
+
+8. Collect the `user_ids` for 500 users who follow the RIVM.
+
+
+```{r}
+# Write your answer here
+```
+
+
+Take a random sample of 5 people that follow the RIVM from the list above as follows:
+
+
+9. Collect the user information for these 5 accounts.
+
+
+```{r}
+# Write your answer here
+```
+
+
+10. Get the most recent 10 tweets from these 5 accounts.^[
+If a user has not posted any tweets, `rtweet` will return no tweets for that user.
+]
+
+
+```{r}
+# Write your answer here
+```
+
+
+11. (Unrelated to above) Collect a sample for 30 seconds of all tweets from the Netherlands.
+
+
+```{r}
+# Write your answer here
+```
+
+
+## Exercise 2: Plotting Social Media Networks
+
+You will need to use the following `R` libraries throughout this exercise:
+
+
+In this exercise you will work with some existing Twitter data so that you can check your results and understanding on a static data set.
+The data you will use is a collection of tweets that all have the hashtag `#rstats` in their text.
+
+The data are collected from 2018, and can be downloaded from the internet: 
+
+```{r, rstat-dowload, cache=TRUE}
+url <- "https://bit.ly/3r8Gu4M"
+# where to save data
+out_file = "data/rstats_tweets.rds"
+# download it!
+download.file(url, destfile = out_file)
+```
+
+The data that you downloaded are an `.rds` file, so you can load them with the `read_rds` function from the `readr` library:
+
+
+Your goal will be to construct a network graph that visualizes the connections between Twitter users. 
+For this exercise you are interested in connections between Twitter users who reply to each others tweets.
+That is, two users are connected if user A has replied to user B's tweet or vice versa. 
+
+Before you work through the guided exercise, we recommend that you take some time to look at the data and understand it's basic structure.
+There are a lot of column names, and you will want to understand what is in them.
+
+Now, let's begin the analysis:
+
+1. Create a new data set that only includes tweets that contain replies:
+
+
+```{r}
+# Write your answer here
+```
+
+
+2. Further reduce the size of the data by dropping the columns you will not need.
+Your new data set should only include the columns named `screen_name` and `reply_to_screen_name`.
+Rename these columns to `from` and `to`.
+
+
+```{r}
+# Write your answer here
+```
+
+
+3. When a user on Twitter writes a long series of tweets about the same topic, they often connect multiple tweets together by replying to their own previous tweet to chain their posts together.
+Remove these replies from the data.
+
+
+```{r}
+# Write your answer here
+```
+
+
+4. Now, you are going to trim down the size of the edge list.
+You will do this mainly so that your computer won't freeze when it comes time to plot the network. 
+Proceed in two steps:
+  (a) Create a data set that counts the number of times a user replies to anyone in the data. 
+  Keep only users who have replied less than 50 times.
+
+
+```{r}
+# Write your answer here
+```
+
+
+  (b) Update your the edge list so that only users who have engaged in at least 50 replies are included.
+
+  
+```{r}
+# Write your answer here
+```
+
+
+5. Convert your `data.frame` containing all the edges to a tidygraph object.
+
+
+```{r}
+# Write your answer here
+```
+
+
+6. Plot the network. 
+   Use the layout `kk` in your solution.
+
+
+```{r}
+# Write your answer here
+```
+
+
+7. Explore different layouts and find the one you think works best visually.
+  You could explore the choice "stress" or any of the following:
+  "dh", "drl", "fr", "gem", "graphopt", "lgl", "mds", "sugiyama", "bipartite", "star" or "tree".
+
+8. The plot you produced weighted the edges by the frequency in which two nodes had replied to each other (it does this implicitly because the same edge occurred many times in the edge list).
+ Prevent this from happening by . 
+ You will have to re-run parts of you code to produce the new graph.
+
+
+```{r}
+# Write your answer here
+```
+
+
+9. You can add color to the plot that you just created. 
+   Color (and re-size) the nodes based on their influence as measured by `centrality_authority`.
+
+
+```{r}
+# Write your answer here
+```
+
+
+10. Save the last plot you created as 'rstats-replies.pdf'.
+
+
+```{r}
+# Write your answer here
+```
+
+
+## Exercise 3: Putting It All Together (Optional, Unguided)
+
+Now that you have explored collecting social media data from Twitter and plotting social networks constructed from Twitter data, you can combine these two steps to build a network graph from your own data.
+
+We recommend doing the following:
+
+1. Use the `rtweet` package to collect data from Twitter for a keyword or hashtag that is of interest to you. 
+   Include retweets, but feel free to play around with location constraints.
+
+2. Plot the retweet and mentions networks from your data.
+   Can you find a way to plot them side by side?
+   Are there interesting dynamics in how the network grows over time (and can you visualize it)?
+
+3. Upload the final images to the Slack channel `#lab01-showcase`.
+   We are eager to see the network patterns that you uncover.^[
+   We are also interested in the underlying data. 
+   If you are willing to share your work, create a separate GitHub repository with the code and saved data from Part 3 of the project and include the link to it as a reply to the visualisation that you have posted in the Slack chat.
+   ]
+
+## License
+
+This work is licensed under a [Creative Commons Attribution-ShareAlike 4.0 International License](http://creativecommons.org/licenses/by-sa/4.0/).
+
+## Suggested Citation
+
+Deer, Lachlan and de With, Hendrik. 2021. Social Media and Web Analytics: Lab 1 - Collecting Social Media Data and Visualizing Social Media Networks. Tilburg University. url = "https://github.com/tisem-digital-marketing/smwa-lab-01"
