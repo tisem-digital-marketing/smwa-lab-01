@@ -203,7 +203,7 @@ The data are collected from 2018, and can be downloaded from the internet:
 # This saves us downloading the file every time you knit the document.
 url <- "https://bit.ly/3r8Gu4M"
 # where to save data
-out_file = "data/rstats_tweets.rds"
+out_file <- "data/rstats_tweets.rds"
 # download it!
 download.file(url, destfile = out_file)
 ```
