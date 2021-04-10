@@ -205,7 +205,7 @@ url <- "https://bit.ly/3r8Gu4M"
 # where to save data
 out_file <- "data/rstats_tweets.rds"
 # download it!
-download.file(url, destfile = out_file)
+download.file(url, destfile = out_file, mode - "wb")
 ```
 
 The data that you downloaded are an `.rds` file, so you can load them with the `read_rds` function from the `readr` library:
