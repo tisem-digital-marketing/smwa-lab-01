@@ -13,13 +13,23 @@
 ## Instructions for Students
 
 Clone a copy of this repository using Git.
-To clone a copy of this repository to your own PC:
+
+To accomplish this you might proceed as follows:
+
+1. Open a terminal session
+2. Change the working directory to the folder you are storing material for this class:
+
+```{bash}
+$ cd your/path/to/smwa-material
+```
+3. Clone a copy of this repository:
 
 ```{bash, eval = FALSE}
 git clone https://github.com/tisem-digital-marketing/smwa-lab-01.git
 ```
 
 Once you have cloned the files, open the cloned repository in RStudio as an RStudio project and work through the questions.
+One way to do this is by clicking on `smwa-lab01.Rproj` which should launch an RStudio session on your machine with this directory as the project folder.
 
 ## License
 
