@@ -31,14 +31,14 @@ By the end of this tutorial you will be able to:
 These tutorials are **not graded**, but we encourage you to invest time and effort into working through them from start to finish.
 Add your solutions to the `lab-01_answer.Rmd` file as you work through the exercises so that you have a record of the work you have done.
 
-Obtain a copy of this questions document and the answer R Markdown file using Git.
-To clone a copy of this repository to your own PC:
+Obtain a copy of the answer file using Git.
+To clone a copy of this repository to your own PC, use the following command:
 
 ```{bash, eval = FALSE}
 $ git clone https://github.com/tisem-digital-marketing/smwa-lab-01.git
 ```
 
-Once you have your copy, open the answer document in RStudio an RStudio project and work through the questions.
+Once you have your copy, open the answer document in RStudio as an RStudio project and work through the questions.
 
 The goal of the tutorials is to explore how to "do" the technical side of social media analytics.
 Use this as an opportunity to push your limits and develop new skills.
@@ -203,9 +203,9 @@ The data are collected from 2018, and can be downloaded from the internet:
 # This saves us downloading the file every time you knit the document.
 url <- "https://bit.ly/3r8Gu4M"
 # where to save data
-out_file = "data/rstats_tweets.rds"
+out_file <- "data/rstats_tweets.rds"
 # download it!
-download.file(url, destfile = out_file)
+download.file(url, destfile = out_file, mode - "wb")
 ```
 
 The data that you downloaded are an `.rds` file, so you can load them with the `read_rds` function from the `readr` library:
