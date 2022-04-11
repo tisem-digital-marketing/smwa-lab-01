@@ -85,8 +85,7 @@ For the remainder of the exercise, we will always include retweets and replies.
 
 
 Instead of working around a radius of Rotterdam, we can get tweets that are geocoded as being located in the Netherlands.
-In the [Computer Lecture](git@github.com:tisem-digital-marketing/smwa-computing-lecture-01.git),
-we showed how to geo-reference the Netherlands.
+In the Computer Lecture we showed how to geo-reference a specific country.
 The geocode for the Netherlands is saved in the `data/` folder.
 You can load this as follows:^[
   This means you do not need to use the `lookup_coords()` function of `rtweet` saving you the need for a Google Maps API Billing code.
