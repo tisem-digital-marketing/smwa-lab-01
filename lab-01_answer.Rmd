@@ -45,6 +45,9 @@ When you are uncertain or do not know what to do next - ask questions of your pe
 
 You will need to use the following `R` libraries throughout this exercise:
 
+```{r}
+library(rtweet)
+```
 
 In this exercise you will access the Twitter API programmatically to collect recent tweets related to Covid-19 posted from the Netherlands.
 The goal of this exercise is to get comfortable with the `rtweet` package so you can harvest Twitter data on topics and users you are interested in for the future.
@@ -136,6 +139,13 @@ Collect the 3200 most recent tweets from them (that's the upper limit Twitter wi
 
 Take a random sample of 5 people that follow the RIVM from the list above as follows:
 
+```{r, eval = FALSE}
+smple <-
+rivm_friends %>%
+sample_n(5) %>%
+select(user_id) %>%
+tibble::deframe() # this converts a dataframe to a vector
+```
 
 9. Collect the user information for these 5 accounts.
 
@@ -167,6 +177,14 @@ If a user has not posted any tweets, `rtweet` will return no tweets for that use
 
 You will need to use the following `R` libraries throughout this exercise:
 
+```{r, eval = FALSE}
+library(readr)
+library(tidygraph)
+library(ggraph)
+library(dplyr)
+library(tidyr)
+library(tibble)
+```
 
 In this exercise you will work with some existing Twitter data so that you can check your results and understanding on a static data set.
 The data you will use is a collection of tweets that all have the hashtag `#rstats` in their text.
@@ -183,6 +201,9 @@ download.file(url, destfile = out_file, mode = "wb")
 
 The data that you downloaded are an `.rds` file, so you can load them with the `read_rds` function from the `readr` library:
 
+```{r, eval = FALSE}
+tweets <- read_rds(out_file)
+```
 
 Your goal will be to construct a network graph that visualizes the connections between Twitter users. 
 For this exercise you are interested in connections between Twitter users who reply to each others tweets.
