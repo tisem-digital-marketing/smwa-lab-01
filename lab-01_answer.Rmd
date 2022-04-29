@@ -80,7 +80,10 @@ For the remainder of the exercise, we will always include retweets and replies.
    HINT: The geo-cordinates of Rotterdam are `'51.9244,4.4777,50km'`.^[
    Hat-tip to Ana Martinovici at Rotterdam School of Management for knowing and sharing these!
    ]
-   
+
+```{r, covid-rdam, eval = FALSE}
+rdam_geocode <- '51.9244,4.4777,50km'
+```   
 
 ```{r}
 # Write your answer here
