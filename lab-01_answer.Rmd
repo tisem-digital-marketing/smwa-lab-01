@@ -1,7 +1,7 @@
 ---
 title: "My answers"
 author: "My name"
-date: '`r format(Sys.time(), "%d %B, %Y")`'
+date: "2023-04-16"
 output: html_document
 ---
 
@@ -12,17 +12,12 @@ Digital Social Networks - the connections between users - are the basis of all s
 To build an understanding of social media, one could reasonably argue we first need to understand the connections between users.
 
 In this tutorial you will learn how to construct networks of Twitter users based on their retweet behaviour, who a user mentions in a tweet or who a user replies to.
-In Part 1 you will explore how to collect tweets and information about twitter users using the Twitter API via R's `rtweet` package.
-Part 2 uses an existing data set and illustrates how to visualise a Twitter network based on replies to an original tweet.
-Part 3 asks you to combine what you have learned in the previous steps and construct a visualisation of a Twitter network for a topic of your choice.
+Using an existing data set you will learn how to visualise a Twitter network based on replies to an original tweet.
 
 ## Learning Goals
 
 By the end of this tutorial you will be able to:
 
-* Use the `rtweet` package to access the Twitter API and download tweets that mention a set of words or hashtags.
-* Use the `rtweet` package to retrieve the friends and followers of a Twitter user.
-* Collect recent tweets from a particular Twitter user.
 * Construct an edge list that connects Twitter users based on mentions, replies and/or retweets
 * Plot networks of Twitter users using `tidygraph` and `ggraph`
 
@@ -41,155 +36,12 @@ The goal of the tutorials is to explore how to "do" the technical side of social
 Use this as an opportunity to push your limits and develop new skills.
 When you are uncertain or do not know what to do next - ask questions of your peers and the instructors on the classes Slack channel `#lab01-discussion`.
 
-## Exercise 1: Collecting Twitter Data with `rtweet`
+## Plotting Social Media Networks
 
 You will need to use the following `R` libraries throughout this exercise:
 
-```{r}
-library(rtweet)
-```
 
-In this exercise you will access the Twitter API programmatically to collect recent tweets related to Covid-19 posted from the Netherlands.
-The goal of this exercise is to get comfortable with the `rtweet` package so you can harvest Twitter data on topics and users you are interested in for the future.
-
-```{block, opts.label = "alert"}
-Note that because you will likely work on this tutorial at a different time to some of your peers, the data that you collect will likely differ from person to person - this is totally OK.
-```
-
-1. Search for the most recent 500 tweets that use the hashtag `#covid19`.
-  Include retweets in what is returned.
-
-
-```{r}
-# Write your answer here
-```
-
-
-2. Adjust your search to return 500 tweets that use the hashtag `#covid19` but do not include retweets, or replies.
-
-
-```{r}
-# Write your answer here
-```
-
-
-For the remainder of the exercise, we will always include retweets and replies.
-
-3. Now, let's geo-restrict the tweets we collect. 
-   Collect 500 tweets using the hashtag `#covid19` that lie within a 50 km radius of Rotterdam.
-   HINT: The geo-cordinates of Rotterdam are `'51.9244,4.4777,50km'`.^[
-   Hat-tip to Ana Martinovici at Rotterdam School of Management for knowing and sharing these!
-   ]
-
-```{r, covid-rdam, eval = FALSE}
-rdam_geocode <- '51.9244,4.4777,50km'
-```   
-
-```{r}
-# Write your answer here
-```
-
-
-Instead of working around a radius of Rotterdam, we can get tweets that are geocoded as being located in the Netherlands.
-In the Computer Lecture we showed how to geo-reference a specific country.
-The geocode for the Netherlands is saved in the `data/` folder.
-You can load this as follows:^[
-  This means you do not need to use the `lookup_coords()` function of `rtweet` saving you the need for a Google Maps API Billing code.
-]
-
-
-4. Modify your previous search to extract tweets from the Netherlands.
-
-
-```{r}
-# Write your answer here
-```
-
-
-5. Adjust your search above to only include tweets written in Dutch. 
-   Try to extract up to 50,000 tweets (i.e. the *more* than the nominal limit from the API).
-   
-
-```{r}
-# Write your answer here
-```
-
-   
-6. The RIVM seems to be the most active Government Department tweeting about health matters.
-Collect the 3200 most recent tweets from them (that's the upper limit Twitter will let you get for free).
-
-
-```{r}
-# Write your answer here
-```
-
-
-7. Collect the `user_ids` for everyone that RIVM follows.
-
-
-```{r}
-# Write your answer here
-```
-
-
-8. Collect the `user_ids` for 500 users who follow the RIVM.
-
-
-```{r}
-# Write your answer here
-```
-
-
-Take a random sample of 5 people that follow the RIVM from the list above as follows:
-
-```{r, eval = FALSE}
-smple <-
-rivm_friends %>%
-sample_n(5) %>%
-select(user_id) %>%
-tibble::deframe() # this converts a dataframe to a vector
-```
-
-9. Collect the user information for these 5 accounts.
-
-
-```{r}
-# Write your answer here
-```
-
-
-10. Get the most recent 10 tweets from these 5 accounts.^[
-If a user has not posted any tweets, `rtweet` will return no tweets for that user.
-]
-
-
-```{r}
-# Write your answer here
-```
-
-
-11. (Unrelated to above) Collect a sample for 30 seconds of all tweets from the Netherlands.
-
-
-```{r}
-# Write your answer here
-```
-
-
-## Exercise 2: Plotting Social Media Networks
-
-You will need to use the following `R` libraries throughout this exercise:
-
-```{r, eval = FALSE}
-library(readr)
-library(tidygraph)
-library(ggraph)
-library(dplyr)
-library(tidyr)
-library(tibble)
-```
-
-In this exercise you will work with some existing Twitter data so that you can check your results and understanding on a static data set.
+In this exercise you will work with some existing Twitter data.
 The data you will use is a collection of tweets that all have the hashtag `#rstats` in their text.
 
 The data are collected from 2018, and can be downloaded from the internet: 
@@ -204,9 +56,6 @@ download.file(url, destfile = out_file, mode = "wb")
 
 The data that you downloaded are an `.rds` file, so you can load them with the `read_rds` function from the `readr` library:
 
-```{r, eval = FALSE}
-tweets <- read_rds(out_file)
-```
 
 Your goal will be to construct a network graph that visualizes the connections between Twitter users. 
 For this exercise you are interested in connections between Twitter users who reply to each others tweets.
@@ -287,11 +136,6 @@ Proceed in two steps:
 7. Explore different layouts and find the one you think works best visually.
   You could explore the choice "stress" or any of the following:
   "dh", "drl", "fr", "gem", "graphopt", "lgl", "mds", "sugiyama", "bipartite", "star" or "tree".
-  
-
-```{r}
-# Write your answer here
-```  
 
 8. The plot you produced weighted the edges by the frequency in which two nodes had replied to each other (it does this implicitly because the same edge occurred many times in the edge list).
  Prevent this from happening by adjusting the edgelist to only contain distinct entries and replotting the graph. 
@@ -320,23 +164,62 @@ Proceed in two steps:
 ```
 
 
-## Exercise 3: Putting It All Together (Optional, Unguided)
+## Bonus Exercise on Plotting
 
-Now that you have explored collecting social media data from Twitter and plotting social networks constructed from Twitter data, you can combine these two steps to build a network graph from your own data.
+The graphs you have created so far use fairly standard algorithms to plot the data. 
+An alternative that sometimes produces nicer looking plots uses an algorithm called `backbone`. 
+This exercise utilizes `backbone` to plot the data. 
 
-We recommend doing the following:
+You will need to install an additional package: 
 
-1. Use the `rtweet` package to collect data from Twitter for a keyword or hashtag that is of interest to you. 
-   Include retweets, but feel free to play around with location constraints.
+```{r, install-backbone, eval = FALSE}
+install.packages("graphlayouts")
+```
 
-2. Plot the retweet and mentions networks from your data.
-   Can you find a way to plot them side by side?
+And then load it into your `R` session:
 
-3. Upload the final images to the Slack channel `#lab01-showcase`.
-   We are eager to see the network patterns that you uncover.^[
-   We are also interested in the underlying data. 
-   If you are willing to share your work, create a separate GitHub repository with the code and saved data from Part 3 of the project and include the link to it as a reply to the visualisation that you have posted in the Slack chat.
-   ]
+```{r, load-backbone, eval = FALSE}
+library(graphlayouts)
+```
+
+1. The `backbone` layout takes a `tidygraph` object and creates a layout. Run the following code to do this (don't worry too much about what this is doing in the background): 
+
+```{r, backbone-layout, eval = FALSE}
+# assumes your network graph is stored as 
+# a tidygraph object labelled "tg"
+bb <- graphlayouts::layout_as_backbone(tg, keep = 0.4)
+E(tg)$col <- FALSE
+E(tg)$col[bb$backbone] <- TRUE
+```
+
+
+```{r}
+# Write your answer here
+```
+
+
+2. Use the `backbone` layout to create a graph as by extending the following code chunk:
+
+```{r, backbone-plot, eval = FALSE}
+# don't change the first line unless your graph
+# has a different name than "tg"
+ggraph(tg, layout = "manual", x = bb$xy[, 1], y = bb$xy[, 2]) +
+    geom_node_point(YOURCODE) + 
+    geom_edge_link(YOURCODE) +
+    YOURCODE
+```
+
+
+```{r}
+# Write your answer here
+```
+
+3. Try different values of the `keep` argument in (1) and plot the figure again. Do you notice any differences as you do?
+
+
+```{r}
+# Write your answer here
+```
 
 ## License
 
@@ -344,4 +227,4 @@ This work is licensed under a [Creative Commons Attribution-ShareAlike 4.0 Inter
 
 ## Suggested Citation
 
-Deer, Lachlan. 2022. Social Media and Web Analytics: Lab 1 - Collecting Social Media Data and Visualizing Social Media Networks. Tilburg University. url = "https://github.com/tisem-digital-marketing/smwa-lab-01"
+Deer, Lachlan. 2023. Social Media and Web Analytics: Lab 1 - Visualizing Social Media Networks. Tilburg University. url = "https://github.com/tisem-digital-marketing/smwa-lab-01"
